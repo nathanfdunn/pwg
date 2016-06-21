@@ -61,7 +61,7 @@ for i in range(opts.n):
 entropy = calcEntropy(opts.pattern)
 if opts.i:
   # Add 1 bit for every letter
-  entropy += len([c for c in opts.pattern if c.lower() in 'ayz'])
+  entropy += sum(c.lower() in 'ayz' for c in opts.pattern)
 
 if not opts.e:
   print
