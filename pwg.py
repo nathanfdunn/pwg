@@ -1,11 +1,9 @@
-import random
+import random, string, argparse, sys
 from math import log
-import string
-import argparse
 
 defaultPattern = 'ZazaZazaZaza00@'
 
-choice = random.SystemRandom().choice
+rand = random.SystemRandom()
 
 parser = argparse.ArgumentParser(description='''
 Password Generator
@@ -15,7 +13,8 @@ terms of the number of possible passwords.
 Characters to be used in the pattern string are
 Y, 0, @, A, Z. These correspond to a letter, a number, a symbol,
  a vowel, or a consonant, respectively. The letter-based symbols
- also come in lowercase variety.
+ also come in lowercase variety. The case of the generated letter
+will match the case of the symbol, unless the -i flag is present.
 ''')
 parser.add_argument('pattern', default=defaultPattern, nargs='?', help='The pattern string to generate passwords')
 parser.add_argument('-n', metavar='N', default=1, type=int, help='Number of passwords to generate')
@@ -28,7 +27,7 @@ consonants = ''.join(c for c in alphabet if c not in vowels)
 numbers = string.digits
 symbols = string.punctuation
 
-defaultMap = {
+charMap = {
   'a' : vowels,
   'y' : alphabet,
   'z' : consonants,
@@ -40,13 +39,13 @@ defaultMap = {
 }
 
 def generatePassword(fmtStr):
-  return ''.join(choice(defaultMap[c]) for c in fmtStr)
+  return ''.join(rand.choice(charMap[c]) for c in fmtStr)
 
 def calcEntropy(fmtStr):
-  return sum(log(len(defaultMap[c]), 2) for c in fmtStr)
+  return sum(log(len(charMap[c]), 2) for c in fmtStr)
 
 def randCase(char):
-  if choice([True, False]):
+  if rand.choice([True, False]):
     return char.upper()
   return char.lower()
 
@@ -56,7 +55,7 @@ for i in range(opts.n):
   pwd = generatePassword(opts.pattern)
   if opts.i:
     pwd = ''.join(randCase(c) for c in pwd)
-  print pwd
+  sys.stdout.write(pwd+'\n')
 
 entropy = calcEntropy(opts.pattern)
 if opts.i:
@@ -64,5 +63,4 @@ if opts.i:
   entropy += sum(c.lower() in 'ayz' for c in opts.pattern)
 
 if not opts.e:
-  print
-  print 'Entropy:', entropy, 'bits'
+  sys.stdout.write( '\nEntropy: {S} bits\n'.format(S=entropy) )

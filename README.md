@@ -2,6 +2,8 @@
 
 PWG lets you generate random passwords from a pattern. Users can choose a pattern that satisfies certain password requirements (number of characters, inclusion of digits, special characters, etc.) and have a password randomly generated that fits the pattern. PWG will also calculate the entropy of the pattern to indicate how strong the generated passwords are.
 
+This shouldn't be used for anything important.
+
 # Pattern String Character Sets
 ```
 Y:  A letter
