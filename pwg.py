@@ -1,5 +1,4 @@
-import random, string, argparse, sys
-from math import log
+import random, string, argparse, sys, math
 
 defaultPattern = 'ZazaZazaZaza00@'
 
@@ -42,19 +41,14 @@ def generatePassword(fmtStr):
   return ''.join(rand.choice(charMap[c]) for c in fmtStr)
 
 def calcEntropy(fmtStr):
-  return sum(log(len(charMap[c]), 2) for c in fmtStr)
-
-def randCase(char):
-  if rand.choice([True, False]):
-    return char.upper()
-  return char.lower()
+  return sum( math.log(len(charMap[c]), 2) for c in fmtStr)
 
 opts = parser.parse_args()
 
 for i in range(opts.n):
   pwd = generatePassword(opts.pattern)
   if opts.i:
-    pwd = ''.join(randCase(c) for c in pwd)
+    pwd = ''.join( rand.choice([c.upper(), c.lower()]) for c in pwd)
   sys.stdout.write(pwd+'\n')
 
 entropy = calcEntropy(opts.pattern)
